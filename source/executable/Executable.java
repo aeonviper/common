@@ -2,11 +2,8 @@ package executable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import orion.core.Utility;
 
 public class Executable implements Runnable {
 
@@ -61,7 +58,9 @@ public class Executable implements Runnable {
 			outputGobbler.join();
 			errorGobbler.join();
 		} catch (IOException | InterruptedException e) {
-			Utility.slurp(logList, e);
+			for (StackTraceElement element : e.getStackTrace()) {
+				logList.add(element.toString());
+			}
 		}
 		alive = false;
 	}
