@@ -13,7 +13,7 @@ import org.apache.commons.beanutils.converters.ShortConverter;
 
 public class BeanUtility {
 
-	private final static BeanUtilsBean instance;
+	protected static BeanUtilsBean instance;
 
 	static {
 
@@ -46,6 +46,10 @@ public class BeanUtility {
 
 	public static BeanUtilsBean instance() {
 		return instance;
+	}
+
+	public static void setInstance(BeanUtilsBean instance) {
+		BeanUtility.instance = instance;
 	}
 
 }
