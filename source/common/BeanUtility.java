@@ -1,7 +1,10 @@
 package common;
 
+import java.math.BigDecimal;
+
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConvertUtilsBean;
+import org.apache.commons.beanutils.converters.BigDecimalConverter;
 import org.apache.commons.beanutils.converters.BooleanConverter;
 import org.apache.commons.beanutils.converters.ByteConverter;
 import org.apache.commons.beanutils.converters.CharacterConverter;
@@ -39,6 +42,7 @@ public class BeanUtility {
 		converter.register(new IntegerConverter(null), Integer.class);
 		converter.register(new LongConverter(null), Long.class);
 		converter.register(new ShortConverter(null), Short.class);
+		converter.register(new BigDecimalConverter(null), BigDecimal.class);
 
 		instance = new BeanUtilsBean(converter);
 
