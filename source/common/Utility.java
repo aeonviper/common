@@ -283,13 +283,13 @@ public class Utility {
 		return str.strip();
 	}
 
-	public static boolean isNotBlank(String text) {
-		return text != null && !text.isBlank();
+	public static boolean isNotBlank(Object object) {
+		return object != null && object.toString() != null && !object.toString().isBlank();
 	}
 
-	public static boolean isNotBlank(String... array) {
-		for (String text : array) {
-			if (!isNotBlank(text)) {
+	public static boolean isNotBlank(Object... array) {
+		for (Object object : array) {
+			if (!isNotBlank(object)) {
 				return false;
 			}
 		}
