@@ -205,6 +205,17 @@ public class Utility {
 		return list;
 	}
 
+	public static Method findMethod(Class clazz, String methodName) {
+		if (clazz == null) {
+			return null;
+		}
+		try {
+			return clazz.getDeclaredMethod(methodName);
+		} catch (NoSuchMethodException | SecurityException | IllegalArgumentException e) {
+			return findMethod(clazz.getSuperclass(), methodName);
+		}
+	}
+
 	public static <K, T> Map<K, T> mapify(List<T> list, Class<K> clazz, String methodName, boolean useLast) {
 		if (list == null) {
 			throw new RuntimeException("List is null");
@@ -217,8 +228,9 @@ public class Utility {
 					getKey = findMethod(entity.getClass(), methodName);
 					if (getKey != null) {
 						for (T element : list) {
-							if (useLast || !map.containsKey((K) getKey.invoke(element))) {
-								map.put((K) getKey.invoke(element), element);
+							K key = (K) getKey.invoke(element);
+							if (useLast || !map.containsKey(key)) {
+								map.put(key, element);
 							}
 						}
 					}
@@ -230,23 +242,38 @@ public class Utility {
 		}
 	}
 
-	public static Method findMethod(Class clazz, String methodName) {
-		if (clazz == null) {
-			return null;
-		}
-		try {
-			return clazz.getDeclaredMethod(methodName);
-		} catch (NoSuchMethodException | SecurityException | IllegalArgumentException e) {
-			return findMethod(clazz.getSuperclass(), methodName);
-		}
-	}
-
 	public static <K, T> Map<K, T> mapify(List<T> list, Class<K> clazz, String methodName) {
 		return mapify(list, clazz, methodName, true);
 	}
 
 	public static <K, T> Map<Long, T> mapify(List<T> list) {
 		return mapify(list, Long.class, "getId", true);
+	}
+
+	public static <K, T> List<T> uniquefy(List<T> list, Class<K> clazz, String methodName) {
+		if (list == null) {
+			throw new RuntimeException("List is null");
+		} else {
+			List<T> transitList = new ArrayList<>();
+			if (!list.isEmpty()) {
+				Set<K> seenSet = new HashSet<>();
+				T entity = list.get(0);
+				Method getKey;
+				try {
+					getKey = findMethod(entity.getClass(), methodName);
+					if (getKey != null) {
+						for (T element : list) {
+							if (seenSet.add((K) getKey.invoke(element))) {
+								transitList.add(element);
+							}
+						}
+					}
+				} catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			}
+			return transitList;
+		}
 	}
 
 	public static <T> List<T> uniquefy(List<T> list) {
@@ -363,6 +390,79 @@ public class Utility {
 
 	public static String format(DateTimeFormatter formatter, TemporalAccessor value) {
 		return value == null ? "" : formatter.format(value);
+	}
+
+	public static boolean isTrue(Boolean expression) {
+		return Boolean.TRUE.equals(expression);
+	}
+
+	public static String csvField(Object object) {
+		if (object == null) {
+			return "";
+		} else {
+			String text = String.valueOf(object);
+			return "\"" + text.replace("\"", "\"\"") + "\"";
+		}
+	}
+
+	public static <T> String join(T[] array, String delimiter, String open, String close) {
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		for (T t : array) {
+			if (!first) {
+				sb.append(delimiter);
+			} else {
+				first = false;
+			}
+			if (open != null) {
+				sb.append(open);
+			}
+			if (t != null) {
+				sb.append(t);
+			}
+			if (close != null) {
+				sb.append(close);
+			}
+		}
+		return sb.toString();
+	}
+
+	public static <T> String join(T[] array, String delimiter) {
+		return join(array, delimiter, null, null);
+	}
+
+	public static <T> String join(List<T> list, String delimiter, String open, String close) {
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		for (T t : list) {
+			if (!first) {
+				sb.append(delimiter);
+			} else {
+				first = false;
+			}
+			if (open != null) {
+				sb.append(open);
+			}
+			if (t != null) {
+				sb.append(t);
+			}
+			if (close != null) {
+				sb.append(close);
+			}
+		}
+		return sb.toString();
+	}
+
+	public static <T> String join(List<T> list, String delimiter) {
+		return join(list, delimiter, null, null);
+	}
+
+	public static String repeat(String element, int multiplier, String delimiter) {
+		List<String> list = new ArrayList<>();
+		for (int i = 0; i < multiplier; i++) {
+			list.add(element);
+		}
+		return join(list, ",");
 	}
 
 }
