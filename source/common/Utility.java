@@ -465,4 +465,10 @@ public class Utility {
 		return join(list, ",");
 	}
 
+	public static void copy(Object source, Object destination, String... array) throws Exception {
+		for (String field : array) {
+			BeanUtility.instance().copyProperty(destination, field, BeanUtility.instance().getProperty(source, field));
+		}
+	}
+
 }
