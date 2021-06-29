@@ -389,7 +389,7 @@ public class Utility {
 	}
 
 	public static String format(DateTimeFormatter formatter, TemporalAccessor value) {
-		return value == null ? "" : formatter.format(value);
+		return value == null ? null : formatter.format(value);
 	}
 
 	public static boolean isTrue(Boolean expression) {
