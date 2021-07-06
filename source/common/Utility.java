@@ -23,6 +23,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.beanutils.PropertyUtilsBean;
+
 import crypto.BCrypt;
 
 public class Utility {
@@ -374,6 +376,12 @@ public class Utility {
 					if (value != null && value.isEmpty()) {
 						field.set(object, null);
 					}
+				} else if (field.getType().equals(Set.class)) {
+					field.setAccessible(true);
+					Set value = (Set) field.get(object);
+					if (value != null && value.isEmpty()) {
+						field.set(object, null);
+					}
 				}
 			}
 			nullifyEmptyField(object, clazz.getSuperclass());
@@ -385,6 +393,30 @@ public class Utility {
 			nullifyEmptyField(object, object.getClass());
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	public static void nullify(Object entity, String... fieldArray) {
+		PropertyUtilsBean propertyUtility = BeanUtility.instance().getPropertyUtils();
+		for (String field : fieldArray) {
+			try {
+				Object property = propertyUtility.getProperty(entity, field);
+				boolean empty = false;
+				if (property instanceof List) {
+					empty = ((List) property).isEmpty();
+				} else if (property instanceof Map) {
+					empty = ((Map) property).isEmpty();
+				} else if (property instanceof Set) {
+					empty = ((Set) property).isEmpty();
+				} else if (property instanceof String) {
+					empty = ((String) property).isBlank();
+				}
+				if (empty) {
+					BeanUtility.instance().setProperty(entity, field, null);
+				}
+			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
