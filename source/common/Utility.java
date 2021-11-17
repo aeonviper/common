@@ -33,11 +33,11 @@ public class Utility {
 		Pattern pattern = Pattern.compile(text);
 		Matcher matcher = pattern.matcher(data);
 		if (matcher.find()) {
-			String[] matches = new String[matcher.groupCount()];
+			String[] matchArray = new String[matcher.groupCount()];
 			for (int i = 0; i < matcher.groupCount(); i++) {
-				matches[i] = matcher.group(i + 1);
+				matchArray[i] = matcher.group(i + 1);
 			}
-			return matches;
+			return matchArray;
 		}
 		return null;
 	}
@@ -45,29 +45,29 @@ public class Utility {
 	public static String[] regexFind(String data, Pattern pattern) {
 		Matcher matcher = pattern.matcher(data);
 		if (matcher.find()) {
-			String[] matches = new String[matcher.groupCount()];
+			String[] matchArray = new String[matcher.groupCount()];
 			for (int i = 0; i < matcher.groupCount(); i++) {
-				matches[i] = matcher.group(i + 1);
+				matchArray[i] = matcher.group(i + 1);
 			}
-			return matches;
+			return matchArray;
 		}
 		return null;
 	}
 
 	public static String regexItem(String data, String text) {
 		int index = 0;
-		String[] matches = regexFind(data, text);
-		if (matches != null && index < matches.length) {
-			return matches[index];
+		String[] matchArray = regexFind(data, text);
+		if (matchArray != null && index < matchArray.length) {
+			return matchArray[index];
 		}
 		return null;
 	}
 
 	public static String regexItem(String data, Pattern pattern) {
 		int index = 0;
-		String[] matches = regexFind(data, pattern);
-		if (matches != null && index < matches.length) {
-			return matches[index];
+		String[] matchArray = regexFind(data, pattern);
+		if (matchArray != null && index < matchArray.length) {
+			return matchArray[index];
 		}
 		return null;
 	}
