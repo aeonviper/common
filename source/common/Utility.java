@@ -489,6 +489,32 @@ public class Utility {
 		return join(list, delimiter, null, null);
 	}
 
+	public static <T> String join(Set<T> set, String delimiter, String open, String close) {
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		for (T t : set) {
+			if (!first) {
+				sb.append(delimiter);
+			} else {
+				first = false;
+			}
+			if (open != null) {
+				sb.append(open);
+			}
+			if (t != null) {
+				sb.append(t);
+			}
+			if (close != null) {
+				sb.append(close);
+			}
+		}
+		return sb.toString();
+	}
+
+	public static <T> String join(Set<T> set, String delimiter) {
+		return join(set, delimiter, null, null);
+	}
+
 	public static String repeat(String element, int multiplier, String delimiter) {
 		List<String> list = new ArrayList<>();
 		for (int i = 0; i < multiplier; i++) {
