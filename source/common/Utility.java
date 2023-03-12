@@ -354,7 +354,7 @@ public class Utility {
 		return map;
 	}
 
-	public static String enumerationName(Object value) {
+	public static String enumeration(Object value) {
 		if (value != null) {
 			return value.toString().replace("_", " ");
 		}
@@ -464,6 +464,9 @@ public class Utility {
 	}
 
 	public static <T> String join(List<T> list, String delimiter, String open, String close) {
+		if (list == null) {
+			return "";
+		}
 		StringBuilder sb = new StringBuilder();
 		boolean first = true;
 		for (T t : list) {
@@ -490,6 +493,9 @@ public class Utility {
 	}
 
 	public static <T> String join(Set<T> set, String delimiter, String open, String close) {
+		if (set == null) {
+			return "";
+		}
 		StringBuilder sb = new StringBuilder();
 		boolean first = true;
 		for (T t : set) {
